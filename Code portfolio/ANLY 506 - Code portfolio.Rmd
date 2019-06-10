@@ -1,0 +1,245 @@
+---
+title: "ANLY 506 - Code Portfolio"
+author: "Ly Dang"
+date: "June 09, 2019"
+output:
+  pdf_document: default
+  html_document:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## I. Introduction
+
+Code portfolio summarizing weekly coding practice 
+
+
+## II. Code porfolio:
+
+```{r}
+library(igraph)
+library(reshape2)
+library(dplyr)
+library(readxl)
+
+```
+
+
+#### Exploratory Data Analysis
+
+```{r}
+library('readr')
+ozone <- read_csv("~/A-HU CPT/ANLY 506/US EPA data 2017.csv")
+str(ozone)
+summary(ozone)
+head(ozone, n = 10)
+
+````
+
+
+#### Importing, saving and managing data
+
+```{r}
+library(tidyverse)
+names(ozone) <- make.names(names(ozone))
+select(ozone, State.Name) %>% unique %>% nrow
+unique(ozone$State.Name)
+
+x <- c(15,20,50,70,80,95)
+x[c(2,6)]
+x[-5]
+
+filter(starwars, species == "Human")
+library(readr)
+income <- read_csv("~/A-HU CPT/ANLY 506/income.csv")
+mean(income$M_weekly)
+mean(income$M_weekly)
+mean(income$M_weekly,trim = 0.1, na.rm = TRUE)
+median(income$M_weekly,trim = 0, na.rm = TRUE)
+
+````
+#### Practical stats
+
+
+```{r}
+library(matrixStats)
+weighted.mean(income$M_weekly,w=income$Industry,na.rm = TRUE)
+weighted_median <- function(M_weekly, Industry,na.rm = TRUE)
+{
+  
+  if(na.rm){
+    
+    df_omit <- na.omit(data.frame(M_weekly, Industry))
+    
+    return(weightedMedian(df_omit$M_weekly, df_omit$Industry,na.rm = TRUE))
+    
+  } 
+  
+  weightedMedian(M_weekly, Industry,na.rm = TRUE)
+  
+}
+weighted_median(income$M_weekly,income$Industry,na.rm = TRUE)
+sd(income$F_workers)
+mad(income$F_workers)
+iqr(income$F_workers)
+names(ozone) <- make.names(names(ozone))
+select(ozone, State.Name) %>% unique %>% nrow
+unique(ozone$State.Name)
+sd(mtcars[["mpg"]])
+
+IQR(mtcars[["mpg"]])
+
+mad(mtcars[["mpg"]])
+
+````
+
+#### Data transformation
+
+```{r}
+library(dplyr)
+library(tibble)
+income <- as.tibble(income)
+income1 <- filter(income, M_weekly > 2000)
+str(income1)
+head(income1)
+library(nycflights13)
+data('flights')
+str(flights)
+flights1 <- filter(flights, day == "30", month == "12")
+flights2 <- filter(flights1, dep_delay == "NA")
+summary(flights2)
+head(flights2)
+flights3 <- filter(flights, dep_delay == "NULL")
+mean(flights1$dep_delay,na.rm = TRUE)
+head(flights2)
+
+income1 <- mutate(income,diff = M_weekly - F_weekly)
+income1 %>% glimpse()
+sd <- sd(income1$diff,na.rm = TRUE)
+round(sd, 2)
+
+library(tidyverse)
+data("iris")
+str(iris)
+summary(iris)
+iris2<-iris %>%
+  
+  filter(Petal.Length > 4.5)
+iris3<-iris2 %>%
+  
+  filter(Species=="virginica")
+summary(iris3)
+````
+
+#### Data visualization
+```{r}
+data("faithful")
+summary(faithful)
+data(who)
+str(who)
+summary(who)
+head(who)
+ggplot(data = mpg) + 
+  geom_point(aes(x = displ, y = hwy, size = 3, shape = '24',colour = 'black'))
+
+````
+#### Create Data frame
+
+```{r}
+Age <- c(22, 25, 18, 20)
+Name <- c("James", "Mathew", "Olivia", "Stella")
+Gender <- c("M", "M", "F", "F")
+DataFrame = data.frame(c(Age), c(Name), c(Gender))
+subset(DataFrame, Gender == "M")
+DataFrame = data.frame(Age,Name,Gender)
+subset(DataFrame,Gender=="M")
+data(AirPassengers)
+AirPassengers[AirPassengers >= 1949 & AirPassengers < 1950]
+AirPassengers[time(AirPassengers) >= 1949 & time(AirPassengers) < 1950]
+
+p <- c(2,7,8)
+q <- c("A", "B", "C")
+x <- list(p, q)
+x[2]
+w <- c(2, 7, 8)
+v <- c("A", "B", "C")
+x <- list(w, v)
+x
+x[[2]] <- "K" 
+x
+x[[2]][1] <- "K" 
+x
+x[[1]][2] <- "K"
+x
+a <- list ("x"=5, "y"=10, "z"=15)
+
+y <- list("a", "b", "c")
+data1 <- data.frame(id=c("ID.1", "ID.2", "ID.3"))
+sample1=c(5.01, 79.40, 80.37)
+sample2=c(5.12, 81.42, 83.12)
+sample3=c(8.62, 81.29, 85.92)
+
+```  
+
+#### Calculate distance
+```{r}
+library(knitr)
+fa <- c(3, 4, 7, 8)
+fb <- c(5, 7, 7, 6)
+fm <- matrix(c(fa,fb), byrow = T, nrow = 2)
+fm
+dist(fm)
+
+````
+
+#### Evaluate the best number of clusters using gap method. 
+```{r}
+
+library(NbClust)
+          
+library (cluster)
+          
+library (clustertend)
+          
+library (factoextra)
+
+Cluster1 <- read.table("~/A-HU CPT/ANLY 506/Cluster 1.txt", quote="\"", comment.char="")
+View(Cluster1)
+Cluster2 <- read.table("~/A-HU CPT/ANLY 506/Cluster 2.txt", quote="\"", comment.char="")
+View(Cluster2)
+Cluster3 <- read.table("~/A-HU CPT/ANLY 506/Cluster 3.txt", quote="\"", comment.char="")
+View(Cluster3)
+clusters <- data.frame(Cluster1, Cluster2, Cluster3)
+names(clusters) <- c("c1", "c2", "c3")
+View(clusters)
+clusters <- clusters[, c(2, 4, 6)]
+fviz_nbclust(clusters, kmeans, method = "gap_stat")+ theme_classic()     
+
+````
+
+
+#### Perform agglomerative clustering
+```{r}
+df <- USArrests
+df <- na.omit(df)
+df <- scale(df)
+head(df)
+d <- dist(df, method = "euclidean")
+hc2 <- agnes(df, method = "complete")
+hc2$ac
+ac <- function(x) {agnes(df, method = x)$ac}
+m <- c( "average", "single", "complete", "ward")
+names(m) <- c( "average", "single", "complete", "ward")
+map_dbl(m, ac)
+
+````
+
+## III. Reference
+
+1. The Art of Data Science - Roger D, Peng and Elizabeth Matsui
+2. UC Berkeley R programming Guide
+.
