@@ -1,0 +1,149 @@
+---
+title: "ANLY 506 - EDA Final Project"
+author: "Ly Dang"
+date: "June 09, 2019"
+output:
+  html_document:
+    code_folding: hide
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## I. Questions to ask
+
+1. Which countries have the largest population?
+2. Which countries have the largest income?
+3. Is there a possible relationship between income and life?
+
+
+## II. Loading libraries:
+
+```{r}
+library(igraph)
+library(reshape2)
+library(dplyr)
+library(readxl)
+library(zoo)
+library(NbClust)
+library (cluster)
+library (clustertend)
+library (factoextra)
+library(tidyverse)
+library(ggplot2)
+
+```
+
+
+## III. Describe data
+
+2. Describe your data 10 pts
+
+Overall narrative summary of data:
+       
+life = life expectancy
+income = gdp per capita
+year
+country
+region
+population - census data collected about every 10 years
+
+o   41,284 observations
+
+o   6 variables
+
+o   type of variables 
+Country   : chr  
+Year      : int  
+life      : num  
+population: num  
+income    : int  
+region    : chr  
+
+o   how disperse is your data 
+life: range = max - min = 84.1 - 1 = 83.1
+year: range = 2015 - 1800 = 215 years
+
+
+o   data wrangling 
+In gapminder population is calculated every ten years. Thus the same # population is applied to every year during the 10 year period. Perform data wrangling to treat missing ppopulation value the same as the lates non-missing value.
+
+o  preprocessing steps 
+
+Other than that, I don't do other preprocessing steps such as normalizing data because it's data exploration so there is no assumption to be satisfied as in hypothesis testing.
+
+
+```{r}
+
+library(readr)
+gapminder <- read_csv("~/A-HU CPT/ANLY 506/gapminder.csv")
+gapminder$population <- na.locf(gapminder$population)
+
+summary(gapminder)
+str(gapminder)
+gapminder1 <- na.omit(gapminder)
+tail(gapminder1)
+
+
+
+````
+
+
+## IV. Explore data
+
+#### Density graph showing life and income relationship:
+
+```{r}
+
+ggplot(data = gapminder1) + 
+  geom_point(aes(x = income, y = population, size = 3, shape = '24',colour = 'black')) +labs(title="Graph 1: life by income",y="Count",x="life") 
+
+
+````
+
+#### Life distribution
+
+```{r}
+d <- density(gapminder1$life)
+plot(d, type="n", main="life distribution")
+polygon(d, col="lightgray", border="gray")
+rug(gapminder1$life, col="red")
+````
+
+#### Data visualization
+```{r}
+
+ggplot(data = gapminder1) + 
+  geom_point(aes(x = income, y = population, size = 3, shape = '24',colour = 'black'))
+
+````
+
+
+#### Calculate distance life and income
+```{r}
+library(knitr)
+fm <- matrix(c(gapminder1$income,gapminder1$life), byrow = T, nrow = 2)
+fm
+dist(fm)
+
+````
+
+#### Evaluate the best number of clusters using gap method. 
+```{r}
+fviz_nbclust(gapminder1, kmeans, method = "gap_stat")+ theme_classic()     
+
+````
+
+
+##. V. Conclustion
+1, There is little relationship between life and income
+2. life doesn't have a normal distribution
+
+
+## III. Reference
+
+1. The Art of Data Science - Roger D, Peng and Elizabeth Matsui
+2. UC Berkeley R programming Guide
+.
